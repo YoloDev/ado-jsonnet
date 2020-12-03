@@ -34,5 +34,6 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_SEM_REL_TOKEN }}
-          VS_MARKETPLACE_TOKEN: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          TFX_TOKEN: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          TFX_URL: ${{ secrets.VS_MARKETPLACE_URL }}
         run: npx semantic-release

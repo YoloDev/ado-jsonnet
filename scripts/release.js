@@ -11,7 +11,10 @@ const verifyConditions = async (pluginConfig, context) => {
   if (options.publish) {
     if (!env.TFX_TOKEN) throw new Error(`No TFX_TOKEN set`);
     if (!env.TFX_URL) throw new Error(`No TFX_URL set`);
-    await execa("tfx", ["login", "-t", env.TFX_TOKEN, "u", env.TFX_URL]);
+    await execa("tfx", ["login", "-t", env.TFX_TOKEN, "u", env.TFX_URL], {
+      stderr: "inherit",
+      stdout: "inherit",
+    });
   }
 };
 
