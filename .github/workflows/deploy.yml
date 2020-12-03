@@ -30,4 +30,5 @@ jobs:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
           extensionFile: yolodev-jsonnet-build-tasks.vsix
+          packagePath: ''
           dryRun: true
