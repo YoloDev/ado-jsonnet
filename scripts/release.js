@@ -31,4 +31,4 @@ const publish = async (pluginConfig, context) => {
   context.logger.log("publishing to marketplace (in theory)");
 };
 
-module.exports = { prepare };
+module.exports = { prepare, verifyConditions };
