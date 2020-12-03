@@ -2,8 +2,6 @@ name: Deploy
 
 on:
   push:
-    tags:
-      - "*"
     branches:
       - "master"
 
@@ -15,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 15
+
       - run: npm run initdev
       - run: npm run build
       - run: npx tfx extension create --json --output-path yolodev-jsonnet-build-tasks.vsix
@@ -24,11 +23,16 @@ jobs:
       #   with:
       #     pat: ${{ secrets.OPEN_VSX_TOKEN }}
 
-      - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@v0
-        with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          registryUrl: https://marketplace.visualstudio.com
-          extensionFile: yolodev-jsonnet-build-tasks.vsix
-          packagePath: ''
-          dryRun: true
+      # - name: Publish to Visual Studio Marketplace
+      #   uses: HaaLeo/publish-vscode-extension@v0
+      #   with:
+      #     pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+      #     registryUrl: https://marketplace.visualstudio.com
+      #     extensionFile: yolodev-jsonnet-build-tasks.vsix
+      #     packagePath: ''
+      #     dryRun: true
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_SEM_REL_TOKEN }}
+          VS_MARKETPLACE_TOKEN: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+        run: npx semantic-release
