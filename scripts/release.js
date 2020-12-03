@@ -40,7 +40,20 @@ const publish = async (pluginConfig, context) => {
     await prepare(pluginConfig, context);
   }
 
-  context.logger.log("publishing to marketplace (in theory)");
+  await execa(
+    "tfx",
+    [
+      "extension",
+      "publish",
+      "--json",
+      "--vsix",
+      "yolodev-jsonnet-build-tasks.vsix",
+    ],
+    {
+      stderr: "inherit",
+      stdout: "inherit",
+    }
+  );
 };
 
-module.exports = { prepare, verifyConditions };
+module.exports = { prepare, verifyConditions, publish };
