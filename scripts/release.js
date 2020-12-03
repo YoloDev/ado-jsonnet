@@ -6,16 +6,14 @@ const execa = require("execa");
 const { updateVersion } = require("./set-task-version");
 
 const verifyConditions = async (pluginConfig, context) => {
-  const { options, env } = context;
+  const { env } = context;
 
-  if (options.publish) {
-    if (!env.TFX_TOKEN) throw new Error(`No TFX_TOKEN set`);
-    if (!env.TFX_URL) throw new Error(`No TFX_URL set`);
-    await execa("tfx", ["login", "-t", env.TFX_TOKEN, "u", env.TFX_URL], {
-      stderr: "inherit",
-      stdout: "inherit",
-    });
-  }
+  if (!env.TFX_TOKEN) throw new Error(`No TFX_TOKEN set`);
+  if (!env.TFX_URL) throw new Error(`No TFX_URL set`);
+  await execa("tfx", ["login", "-t", env.TFX_TOKEN, "u", env.TFX_URL], {
+    stderr: "inherit",
+    stdout: "inherit",
+  });
 };
 
 const prepare = async (pluginConfig, context) => {
