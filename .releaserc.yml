@@ -8,5 +8,7 @@ plugins:
     - preset: conventionalcommits
       presetConfig: {}
   - '@semantic-release/release-notes-generator'
-  - './scripts/release'
+  -
+    - semantic-release-vsce
+    - packageVsix: yolodev-jsonnet-build-tasks.vsix
   - '@semantic-release/github'
