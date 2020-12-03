@@ -1,0 +1,39 @@
+{
+  "name": "ado-jsonnet",
+  "description": "Jsonnet tasks for ADO",
+  "scripts": {
+    "initdev": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-p -l initdev:*",
+    "initdev:npm": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s -l initdev:npm:*",
+    "initdev:npm:base": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always npm ci --no-progress --no-update-notifier",
+    "initdev:npm:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always glob-exec --parallel --foreach \"BuildTasks/*/tsconfig.json\" -- \"cd {{file.dir}} && npm ci --no-update-notifier --no-progress\"",
+    "compile:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always glob-exec \"BuildTasks/*/tsconfig.json\" -- \"tsc -b {{files.join(' ')}}\"",
+    "postcompile:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s lint:tasks",
+    "lint:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always glob-exec --parallel --foreach \"BuildTasks/*/tsconfig.json\" -- \"eslint {{file.dir}}/*.ts --parser-options \\\"{'project':['{{file}}']}\\\"\"",
+    "package:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always tfx extension create --root . --output-path dist --manifest-globs vss-extension.json",
+    "build": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s build:tasks",
+    "build:clean": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s clean initdev build",
+    "build:tasks": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s compile:tasks",
+    "package": "cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-s build:clean package:tasks",
+    "clean": "git clean -fdX"
+  },
+  "author": "Aleksander Heintz <alxandr@alxandr.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "@octokit/types": "^6.0.3",
+    "@types/download": "^6.2.4",
+    "@types/node": "*",
+    "@types/q": "*",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.14.0",
+    "glob-exec": "^0.1.1",
+    "npm-run-all": "^4.1.5",
+    "tfx-cli": "^0.8.3",
+    "typescript": "^4.1.2"
+  },
+  "keywords": [
+    "vsts",
+    "tfs"
+  ]
+}

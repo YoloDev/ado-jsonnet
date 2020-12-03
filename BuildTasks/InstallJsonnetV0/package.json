@@ -1,0 +1,11 @@
+{
+  "name": "ado-jsonnet.installjsonnet.0",
+  "description": "Install Jsonnet Task",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/request": "^5.4.12",
+    "azure-pipelines-task-lib": "^3.0.6-preview.0",
+    "decompress": "^4.2.1",
+    "download": "^8.0.0"
+  }
+}

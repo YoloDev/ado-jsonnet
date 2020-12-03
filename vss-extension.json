@@ -1,0 +1,44 @@
+{
+  "manifestVersion": 1,
+  "id": "yolodev-jsonnet-build-tasks",
+  "version": "0.1.0",
+  "name": "Jsonnet Build Tasks",
+  "publisher": "YoloDev",
+  "categories": ["Azure Pipelines"],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "tags": [
+    "Extension",
+    "Marketplace",
+    "Publish",
+    "Package",
+    "Install",
+    "Continuous Integration",
+    "Continuous Delivery",
+    "Build",
+    "Release",
+    "Azure Pipelines",
+    "Azure DevOps Extensions",
+    "Visual Studio Extensions"
+  ],
+  "public": true,
+  "scopes": [],
+  "files": [
+    {
+      "path": "BuildTasks/InstallJsonnetV0"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "package-extension-build-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": ["ms.vss-distributed-task.tasks"],
+      "properties": {
+        "name": "BuildTasks/InstallJsonnetV0"
+      }
+    }
+  ]
+}

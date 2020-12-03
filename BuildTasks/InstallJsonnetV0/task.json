@@ -1,0 +1,60 @@
+{
+  "id": "94867b75-91f5-4f0b-83cf-36e7d4bdf83f",
+  "name": "InstallJsonnet",
+  "friendlyName": "Install Jsonnet (go version)",
+  "description": "Downloads and install the go version of Jsonnet",
+  "author": "Aleksander Heintz <alxandr@alxandr.me>",
+  "category": "Utility",
+  "version": {
+    "Major": 0,
+    "Minor": 1,
+    "Patch": 0
+  },
+  "visibility": ["Build", "Release"],
+  "demands": ["npm"],
+  "minimumAgentVersion": "1.99.0",
+  "instanceNameFormat": "Install Jsonnet",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "connection",
+      "type": "connectedService:github",
+      "label": "GitHub Connection",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "GitHub service connection"
+    },
+    {
+      "name": "version",
+      "type": "pickList",
+      "label": "Release",
+      "defaultValue": "",
+      "required": false,
+      "properties": {
+        "EditableOptions": "True"
+      },
+      "helpMarkDown": "Release version/tag to install"
+    },
+    {
+      "name": "installationPath",
+      "type": "string",
+      "label": "Path To Install Jsonnet",
+      "defaultValue": "$(Agent.ToolsDirectory)/jsonnet",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Specify where .Net Core SDK/Runtime should be installed. Different paths can have the following impact on .Net's behavior.<li>$(Agent.ToolsDirectory): This makes the version to be cached on the agent since this directory is not cleanup up across pipelines. All pipelines running on the agent, would have access to the versions installed previously using the agent.</li><li>$(Agent.TempDirectory): This can ensure that a pipeline doesn't use any cached version of .Net core since this folder is cleaned up after each pipeline.</li><li>Any other path: You can configure any other path given the agent process has access to the path. This will change the state of the machine and impact all processes running on it.<br/>Note that you can also configure Multi-Level Lookup setting which can configure .Net host's probing for a suitable version."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "InstallJsonnetV0/InstallJsonnet.js",
+      "argumentFormat": ""
+    }
+  }
+}
