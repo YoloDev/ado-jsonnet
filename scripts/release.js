@@ -18,6 +18,20 @@ const verifyConditions = async (pluginConfig, context) => {
 
 const prepare = async (pluginConfig, context) => {
   await updateVersion(context.nextRelease.version);
+  await execa(
+    "tfx",
+    [
+      "extension",
+      "create",
+      "--json",
+      "--output-path",
+      "yolodev-jsonnet-build-tasks.vsix",
+    ],
+    {
+      stderr: "inherit",
+      stdout: "inherit",
+    }
+  );
   prepared = true;
 };
 
