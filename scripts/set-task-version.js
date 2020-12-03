@@ -1,48 +1,56 @@
 /* eslint-disable */
 
-var path = require("path");
-var fs = require("fs");
-var jsonfile = require("jsonfile");
+const path = require("path");
+const fs = require("fs");
+const jsonfile = require("jsonfile");
+const semver = require("semver");
 
-function getBuildTasks() {
-  return fs
-    .readdirSync(path.join(__dirname, "../BuildTasks"))
-    .filter(function (file) {
-      return (
-        ["common", "typings"].indexOf(file.toLowerCase()) < 0 &&
-        fs.statSync(path.join(buildTasksDir, file)).isDirectory()
-      );
-    });
+async function* getBuildTaskDirs() {
+  const entries = await fs.promises.readdir(
+    path.resolve(__dirname, "..", "BuildTasks")
+  );
+
+  for (const entry of entries) {
+    if (["common", "typings"].includes(entry.toLowerCase())) continue;
+    const fullPath = path.resolve(buildTasksDir, entry);
+    const stat = await fs.promises.stat(fullPath);
+    if (!stat.isDirectory()) continue;
+    yield fullPath;
+  }
 }
 
-var args = process.argv.slice(2);
+const updateVersion = async (newVersion, logger) => {
+  const parsed = semver.parse(newVersion);
+  const versionString = `${parsed.minor}.${parsed.minor}.${parsed.patch}`;
 
-var newVersionValues = args[0].split("."); // should be a string like 1.2.3
+  logger.log("Setting vss-extension version to: %s", versionString);
 
-var newVersion = {
-  Major: parseInt(newVersionValues[0], 10),
-  Minor: parseInt(newVersionValues[1], 10),
-  Patch: parseInt(newVersionValues[2], 10),
+  const extensionFile = path.resolve(__dirname, "..", "vss-extension.json");
+  const extension = await jsonfile.readFile(extensionFile);
+  extension.version = versionString;
+  await jsonfile.writeFile(extensionFile, extension, { spaces: 2, EOL: "\n" });
+
+  const newVersionParts = Object.freeze({
+    Major: parsed.major,
+    Minor: parsed.minor,
+    Patch: parsed.patch,
+  });
+
+  logger.log("Setting all task versions to: %O", newVersion);
+  for await (const dir of getBuildTaskDirs()) {
+    const taskJsonFiles = [
+      path.resolve(dir, "task.json"),
+      path.resolve(dir, "task.loc.json"),
+    ];
+
+    for (const taskJsonFile of taskJsonFiles) {
+      const task = await jsonfile.readFile(taskJsonFile);
+
+      task.version = newVersionParts;
+
+      await jsonfile.writeFile(taskJsonFile, task, { spaces: 2, EOL: "\n" });
+    }
+  }
 };
 
-console.log("Setting all task versions to: " + JSON.stringify(newVersion));
-
-var buildTasksDir = path.join(__dirname, "../BuildTasks");
-var buildTaskNames = getBuildTasks();
-buildTaskNames.forEach(function (name) {
-  var taskJsonFiles = [
-    path.join(buildTasksDir, name, "task.json"),
-    path.join(buildTasksDir, name, "task.loc.json"),
-  ];
-
-  taskJsonFiles.forEach(function (taskJsonFile) {
-    console.log("Updating: " + taskJsonFile);
-    if (fs.existsSync(taskJsonFile)) {
-      var task = jsonfile.readFileSync(taskJsonFile);
-
-      task["version"] = newVersion;
-
-      jsonfile.writeFileSync(taskJsonFile, task, { spaces: 2, EOL: "\r\n" });
-    }
-  });
-});
+module.exports = { updateVersion };

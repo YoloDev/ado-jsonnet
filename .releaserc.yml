@@ -8,4 +8,5 @@ plugins:
     - preset: conventionalcommits
       presetConfig: {}
   - '@semantic-release/release-notes-generator'
+  - './scripts/release'
   - '@semantic-release/github'
