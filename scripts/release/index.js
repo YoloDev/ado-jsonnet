@@ -2,6 +2,7 @@
 
 const verifyTfx = require('./verify');
 const prepareTfx = require('./prepare');
+const publishTfx = require('./publish');
 
 let verified = false;
 let prepared = false;
@@ -21,4 +22,13 @@ const prepare = async (pluginConfig, { nextRelease: { version }, logger, env }) 
   prepared = true;
 };
 
-module.exports = { verifyConditions, prepare };
+const publish = async (pluginConfig, { nextRelease: { version }, logger, env }) => {
+  if (!prepared) {
+    await prepareTfx(version, pluginConfig.packageVsix, logger);
+    prepared = true;
+  }
+
+  await publishTfx(pluginConfig.packageVsix, logger, env);
+};
+
+module.exports = { verifyConditions, prepare, publish };
