@@ -6,12 +6,13 @@ const jsonfile = require("jsonfile");
 const semver = require("semver");
 const findUp = require("find-up");
 
-async function* getBuildTaskDirs(dir) {
-  const entries = await fs.promises.readdir(path.resolve(dir, "BuildTasks"));
+async function* getBuildTaskDirs(rootDir) {
+  const buildTasksDir = path.resolve(dir, "BuildTasks");
+  const entries = await fs.promises.readdir(buildTasksDir);
 
   for (const entry of entries) {
     if (["common", "typings"].includes(entry.toLowerCase())) continue;
-    const fullPath = path.resolve(dir, entry);
+    const fullPath = path.resolve(buildTasksDir, entry);
     const stat = await fs.promises.stat(fullPath);
     if (!stat.isDirectory()) continue;
     yield fullPath;
@@ -21,7 +22,7 @@ async function* getBuildTaskDirs(dir) {
 const updateVersion = async (newVersion, logger) => {
   const extensionFile = await findUp("vss-extension.json");
   const parsed = semver.parse(newVersion);
-  const versionString = `${parsed.minor}.${parsed.minor}.${parsed.patch}`;
+  const versionString = `${parsed.major}.${parsed.minor}.${parsed.patch}`;
 
   logger.log("Setting vss-extension version to: %s", versionString);
 
