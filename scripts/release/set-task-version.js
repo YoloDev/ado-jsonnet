@@ -7,7 +7,7 @@ const semver = require("semver");
 const findUp = require("find-up");
 
 async function* getBuildTaskDirs(rootDir) {
-  const buildTasksDir = path.resolve(dir, "BuildTasks");
+  const buildTasksDir = path.resolve(rootDir, "BuildTasks");
   const entries = await fs.promises.readdir(buildTasksDir);
 
   for (const entry of entries) {
