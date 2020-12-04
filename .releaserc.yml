@@ -9,6 +9,6 @@ plugins:
       presetConfig: {}
   - '@semantic-release/release-notes-generator'
   -
-    - semantic-release-vsce
+    - ./scripts/release
     - packageVsix: yolodev-jsonnet-build-tasks.vsix
   - '@semantic-release/github'

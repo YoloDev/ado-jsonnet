@@ -53,4 +53,4 @@ const updateVersion = async (newVersion, logger) => {
   }
 };
 
-module.exports = { updateVersion };
+module.exports = updateVersion;

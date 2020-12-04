@@ -1,5 +1,6 @@
 {
-  "name": "ado-jsonnet",
+  "name": "yolodev-jsonnet-build-tasks",
+  "publisher": "YoloDev",
   "description": "Jsonnet tasks for ADO",
   "scripts": {
     "initdev": "npm ci --no-update-notifier --no-progress && cross-env FORCE_COLOR=1 NPM_CONFIG_COLOR=always run-p -l initdev:npm:*",
@@ -19,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@octokit/types": "^6.0.3",
+    "@semantic-release/error": "^2.2.0",
     "@types/download": "^6.2.4",
     "@types/node": "*",
     "@types/q": "*",
