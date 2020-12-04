@@ -11,4 +11,8 @@ plugins:
   -
     - ./scripts/release
     - packageVsix: yolodev-jsonnet-build-tasks.vsix
-  - '@semantic-release/github'
+  -
+    - '@semantic-release/github'
+    - assets:
+      - path: yolodev-jsonnet-build-tasks.vsix
+        label: VSIX package
