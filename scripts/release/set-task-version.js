@@ -11,7 +11,7 @@ async function* getBuildTaskDirs(dir) {
 
   for (const entry of entries) {
     if (["common", "typings"].includes(entry.toLowerCase())) continue;
-    const fullPath = path.resolve(buildTasksDir, entry);
+    const fullPath = path.resolve(dir, entry);
     const stat = await fs.promises.stat(fullPath);
     if (!stat.isDirectory()) continue;
     yield fullPath;
