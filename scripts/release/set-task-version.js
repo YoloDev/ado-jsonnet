@@ -4,11 +4,10 @@ const path = require("path");
 const fs = require("fs");
 const jsonfile = require("jsonfile");
 const semver = require("semver");
+const findUp = require("find-up");
 
-async function* getBuildTaskDirs() {
-  const entries = await fs.promises.readdir(
-    path.resolve(__dirname, "..", "BuildTasks")
-  );
+async function* getBuildTaskDirs(dir) {
+  const entries = await fs.promises.readdir(path.resolve(dir, "BuildTasks"));
 
   for (const entry of entries) {
     if (["common", "typings"].includes(entry.toLowerCase())) continue;
@@ -20,12 +19,12 @@ async function* getBuildTaskDirs() {
 }
 
 const updateVersion = async (newVersion, logger) => {
+  const extensionFile = await findUp("vss-extension.json");
   const parsed = semver.parse(newVersion);
   const versionString = `${parsed.minor}.${parsed.minor}.${parsed.patch}`;
 
   logger.log("Setting vss-extension version to: %s", versionString);
 
-  const extensionFile = path.resolve(__dirname, "..", "vss-extension.json");
   const extension = await jsonfile.readFile(extensionFile);
   extension.version = versionString;
   await jsonfile.writeFile(extensionFile, extension, { spaces: 2, EOL: "\n" });
@@ -37,7 +36,7 @@ const updateVersion = async (newVersion, logger) => {
   });
 
   logger.log("Setting all task versions to: %O", newVersion);
-  for await (const dir of getBuildTaskDirs()) {
+  for await (const dir of getBuildTaskDirs(path.dirname(extensionFile))) {
     const taskJsonFiles = [
       path.resolve(dir, "task.json"),
       path.resolve(dir, "task.loc.json"),
