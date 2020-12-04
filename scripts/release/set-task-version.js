@@ -6,7 +6,7 @@ const jsonfile = require("jsonfile");
 const semver = require("semver");
 const findUp = require("find-up");
 
-async function* getBuildTaskDirs(rootDir) {
+async function* getBuildTaskDirs(rootDir, logger) {
   const buildTasksDir = path.resolve(rootDir, "BuildTasks");
   const entries = await fs.promises.readdir(buildTasksDir);
 
@@ -15,6 +15,7 @@ async function* getBuildTaskDirs(rootDir) {
     const fullPath = path.resolve(buildTasksDir, entry);
     const stat = await fs.promises.stat(fullPath);
     if (!stat.isDirectory()) continue;
+    // logger.info("Found task dir: %s", fullPath);
     yield fullPath;
   }
 }
@@ -37,13 +38,17 @@ const updateVersion = async (newVersion, logger) => {
   });
 
   logger.log("Setting all task versions to: %O", newVersion);
-  for await (const dir of getBuildTaskDirs(path.dirname(extensionFile))) {
+  for await (const dir of getBuildTaskDirs(
+    path.dirname(extensionFile),
+    logger
+  )) {
     const taskJsonFiles = [
       path.resolve(dir, "task.json"),
       path.resolve(dir, "task.loc.json"),
     ];
 
     for (const taskJsonFile of taskJsonFiles) {
+      if (!fs.existsSync(taskJsonFile)) continue;
       const task = await jsonfile.readFile(taskJsonFile);
 
       task.version = newVersionParts;
