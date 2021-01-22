@@ -19,7 +19,7 @@
   "author": "Aleksander Heintz <alxandr@alxandr.me>",
   "license": "MIT",
   "devDependencies": {
-    "@octokit/types": "6.4.0",
+    "@octokit/types": "6.4.2",
     "@semantic-release/error": "2.2.0",
     "@types/download": "6.2.4",
     "@types/node": "*",
